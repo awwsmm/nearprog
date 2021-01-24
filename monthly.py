@@ -2,8 +2,9 @@
 
 import json
 import praw # pip3 install praw
+import datetime
 
-# run with: python3 top_of_the_month.py
+# run with: python3 monthly.py
 # requires: a config.json file in this directory, formatted like:
 #             {
 #               "client_id":     "Reddit API client ID",
@@ -22,5 +23,9 @@ reddit = praw.Reddit(
              username      = config['username'],
              password      = config['password'])
 
-for submission in reddit.subreddit("nearprog").top("month"):
-    print(f'{submission.score:3} | {submission.title}')
+dt = datetime.datetime.today()
+
+with open(f'monthly/{dt.year}-{dt.month:02}-{dt.day:02}.txt', 'w') as outfile:
+    for submission in reddit.subreddit("nearprog").top("month"):
+        print(f'{submission.score:3} | {submission.title}', file=outfile)
+
