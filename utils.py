@@ -26,3 +26,25 @@ tests([
     'any([1, 2, 3, 4], lambda x: x > 3)',
     'any([1, 2, 3, 4], lambda x: x > 5)'
     ])
+
+# returns True if all elements of the array satisfy the predicate, p
+def all(array, p):
+    for elem in array:
+        if not p(elem):
+            return False
+    return True
+
+tests([
+    'all([1, 2, 3, 4], lambda x: x > 3)',
+    'all([1, 2, 3, 4], lambda x: x > 0)'
+    ])
+
+# filters out (removes) elements which do not satisfy the predicate, p
+def filter(array, p):
+    return [elem for elem in array if p(elem)]
+
+tests([
+    'filter(["a", "ab", "abc", "abcd"], lambda x: len(x) > 2)',
+    'filter([False, True, True, False], lambda x: x)',
+    'filter([-1, 1, -2, 3], lambda x: x * x > 1)',
+    ])
