@@ -10,7 +10,7 @@ import fuzzy
 dt = datetime.datetime.today()
 counter = 1
 
-with open('blacklist.json') as f:
+with open('../json/blacklist.json') as f:
     blacklist = json.load(f)
 
 def is_blacklisted(artist, song):
@@ -19,7 +19,7 @@ def is_blacklisted(artist, song):
           return True;
     return False;
 
-with open(f'monthly/{dt.year}-{dt.month:02}-{dt.day:02}.txt', 'w') as outfile:
+with open(f'../monthly/{dt.year}-{dt.month:02}-{dt.day:02}.txt', 'w') as outfile:
     for submission in nearprog.get().top("month"):
         if (submission.link_flair_text != 'Discussion'):
             title_parts = submission.title.split(' - ')

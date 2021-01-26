@@ -13,7 +13,7 @@ import praw # pip3 install praw
 #     for submission in data.top("month"):
 #         # do something
 
-# requires: a config.json file in this directory, formatted like:
+# requires: a config.json file in the ../json directory, formatted like:
 #             {
 #               "client_id":     "Reddit API client ID",
 #               "client_secret": "Reddit API client secret key",
@@ -22,7 +22,7 @@ import praw # pip3 install praw
 #             }
 
 def get():
-    with open('config.json') as f:
+    with open('../json/config.json') as f:
         config = json.load(f)
 
     reddit = praw.Reddit(
