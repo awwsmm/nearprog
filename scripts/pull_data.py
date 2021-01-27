@@ -9,8 +9,8 @@ import extract
 import json
 
 # Usage:
-#  1) fetch all data to a temporary file by setting fetch = True and running $ python3 stats.py
-#  2) parse all data in the tmp file by setting fetch = False and running $ python3 stats.py
+#  1) fetch all data to a temporary file by setting fetch = True and running $ python3 pull_data.py
+#  2) parse all data in the raw.txt file by setting fetch = False and running $ python3 pull_data.py
 
 fetch = False
 limit = None
@@ -23,8 +23,8 @@ types = ["str", "float", "str", "int", "float", "str"]
 
 # fetch all submission titles and save to double-semicolon-separated variables file (a;;b;;c)
 if (fetch):
-    with open("tmp", 'w') as outfile:
-        def print_to_tmp(submission):
+    with open("raw.txt", 'w') as outfile:
+        def print_to_raw(submission):
             row = ""
             for field in fields:
                 row = row + str(eval(f"submission.{field}")) + ";;"
@@ -32,11 +32,11 @@ if (fetch):
 
         for submission in data.top("all", limit=limit):
             if (submission.link_flair_text != 'Discussion' and '[Discussion]' not in submission.title):
-                print_to_tmp(submission)
+                print_to_raw(submission)
 
-# parse submission titles from tmp file
+# parse submission titles from raw.txt file
 else:
-    with open("tmp", 'r') as infile, open("out", 'w') as outfile:
+    with open("raw.txt", 'r') as infile, open("parsed.json", 'w') as outfile:
 
         # open the JSON object for the first post
         print('[{', file=outfile)
@@ -64,7 +64,7 @@ else:
                     field += '"'
                     print(f'  "{field:{max_field_width}s}: {field_value},', file=outfile)
 
-            # if tmp file contains a "title" field, try to parse it
+            # if raw.txt file contains a "title" field, try to parse it
             if ("title" in fields):
                 title = field_values[fields.index("title")]
                 raw_title = title.strip() # .replace('\n', '').replace('\r', '').replace('\t', ' ')

@@ -3,3 +3,6 @@ __pycache__
 tmp
 temp
 out
+parsed.json
+raw.txt
+.DS_Store
