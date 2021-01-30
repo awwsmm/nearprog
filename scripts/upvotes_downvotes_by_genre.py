@@ -53,8 +53,9 @@ tuples = sorted(tuples, key=lambda x: x[1])
 
 genres, upvotes, downvotes = zip(*tuples)
 
-plt.bar(genres, upvotes,   label="Median Upvotes")
 plt.bar(genres, downvotes, label="Median Downvotes")
+plt.bar(genres, upvotes,   label="Median Upvotes")
+
 plt.xticks(rotation=90)
 plt.legend()
 plt.tight_layout()
