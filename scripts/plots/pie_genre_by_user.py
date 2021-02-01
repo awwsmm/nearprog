@@ -3,9 +3,12 @@ import json
 from collections import Counter
 import sys
 
+import parent # import parent directory scripts
+import files  # ...which includes this
+
 username = sys.argv[1]
 
-with open('parsed.json') as f:
+with files.relopen('output/parsed.json') as f:
     posts = json.load(f)
 
 counts = Counter([post['link_flair_text'] for post in posts if post['author'] == username])
@@ -22,5 +25,5 @@ ax1.pie(
     pctdistance=0.9,
     labeldistance=1.1)
 
-plt.savefig(f'output/pie_genre_for_{username}.png', dpi=200)
+plt.savefig(parent.relpath(f'output/pie_genre_for_{username}.png'), dpi=100)
 #plt.show()

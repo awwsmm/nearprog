@@ -3,7 +3,10 @@ from collections import defaultdict
 from statistics import median
 import json
 
-with open('parsed.json') as f:
+import parent # import parent directory scripts
+import files  # ...which includes this
+
+with files.relopen('output/parsed.json') as f:
     posts = json.load(f)
 
 counts = [(post['link_flair_text'], post['score'], post['upvote_ratio']) for post in posts]
@@ -47,10 +50,6 @@ for (genre, posts) in list(d.items()):
     tuples.append((genre, median(upvotes), -1*median(downvotes)))
 
 tuples = sorted(tuples, key=lambda x: x[1])
-
-#for tuple in tuples:
-#    print(tuple)
-
 genres, upvotes, downvotes = zip(*tuples)
 
 plt.bar(genres, downvotes, label="Median Downvotes")
@@ -60,5 +59,5 @@ plt.xticks(rotation=90)
 plt.legend()
 plt.tight_layout()
 
-plt.savefig('output/upvotes_downvotes_by_genre.png')
+plt.savefig(parent.relpath('output/upvotes_downvotes_by_genre.png'), dpi=100)
 #plt.show()

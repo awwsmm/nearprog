@@ -1,42 +1,95 @@
-#!/usr/bin/python
+import os, sys, json, re
 
-import nearprog
-import datetime
-import re # regular expressions
-import fuzzy
-import utils
-import extract
-import json
+from tools import reddit
+from tools import extract
 
-# Usage:
-#  1) fetch all data to a temporary file by setting fetch = True and running $ python3 pull_data.py
-#  2) parse all data in the raw.txt file by setting fetch = False and running $ python3 pull_data.py
+#===============================================================================
+#
+#  utilities
+#
+#===============================================================================
 
-fetch = False
-limit = None
+# open file relative to *this file*, not relative to user's current directory
+def relopen (file, rw='r'):
+    basedir = os.getcwd()
+    scriptpath = __file__
+    filepath = os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
+    return open(filepath, rw)
 
-data = nearprog.get()
+#===============================================================================
+#
+#  methods to pull / parse different data from Reddit
+#
+#-------------------------------------------------------------------------------
+#
+#  to test *fetching* posts / submissions from Reddit, do
+#    $ python3 path/to/pull_data.py posts fetch [N]
+#
+#  ...where [N] is the maximum number of posts to fetch. (Note that the number
+#  of fetched posts will probably be < N because of removed Discussion posts.)
+#  This will not save any posts to an output file, but only print them to the
+#  terminal, un-processed.
+#
+#  N is optional, and if unset, all available posts will be fetched from Reddit.
+#
+#  to test *parsing* posts / submissions from Reddit, do
+#    $ python3 path/to/pull_data.py posts parse [N]
+#
+#  to pull and parse posts and save to raw and parsed output files, do
+#    $ python3 path/to/pull_data.py posts save [N]
+#
+#===============================================================================
 
-fields = ["title", "created_utc", "link_flair_text", "score", "upvote_ratio", "author"]
-max_field_width = max(len(max(fields, key=len)), len("raw_title")) + 2
-types = ["str", "float", "str", "int", "float", "str"]
+# fetch and parse post data
+def posts(limit = None, fetch = True, parse = True, export = True):
+    data = reddit.nearprog()
 
-# fetch all submission titles and save to double-semicolon-separated variables file (a;;b;;c)
-if (fetch):
-    with open("raw.txt", 'w') as outfile:
-        def print_to_raw(submission):
-            row = ""
-            for field in fields:
-                row = row + str(eval(f"submission.{field}")) + ";;"
-            print(row[:-2], file=outfile)
+    typed_fields = [("str",   "title"),
+                    ("float", "created_utc"),
+                    ("str",   "link_flair_text"),
+                    ("int",   "score"),
+                    ("float", "upvote_ratio"),
+                    ("str",   "author")]
 
-        for submission in data.top("all", limit=limit):
-            if (submission.link_flair_text != 'Discussion' and '[Discussion]' not in submission.title):
-                print_to_raw(submission)
+    types, fields = zip(*typed_fields)
 
-# parse submission titles from raw.txt file
-else:
-    with open("raw.txt", 'r') as infile, open("parsed.json", 'w') as outfile:
+    out_raw    = "data/posts_raw.txt"
+    out_parsed = "data/posts_parsed.json"
+
+    # (1) fetch new data from Reddit, optionally save to raw output file
+    if (fetch):
+        def get_fields(submission):
+            return list(map(lambda x: str(getattr(submission, x)), fields))
+            
+        # fetch post fields and separate with double semicolons (;;)
+        all_posts = data.top("all", limit=limit)
+        song_posts = filter(lambda x: reddit.submission_is_song(x), all_posts)
+        fetched_posts = [";;".join(get_fields(post)) for post in song_posts]
+
+        # export to output file as optional side effect
+        if (export):
+            with relopen(out_raw, 'w') as outfile:
+                for row in fetched_posts:
+                    print(row, file=outfile)
+
+        # if we're fetching but not exporting, print to terminal (testing)
+        else:
+            for row in fetched_posts:
+                print(row)
+            print("")
+
+    # (2) parse submissions from memory or from raw file as input file
+    if (parse):
+        max_field_width = max(len(max(fields, key=len)), len("raw_title")) + 2
+
+        if (export):
+            infile = relopen(out_raw, 'r')
+            outfile = relopen(out_parsed, 'w')
+        else:
+            infile = fetched_posts
+            outfile = sys.stdout
+
+        # with fi as infile, fo as outfile:
 
         # open the JSON object for the first post
         print('[{', file=outfile)
@@ -55,38 +108,32 @@ else:
             # write the non-title fields (we'll parse "title" below)
             for field in fields:
                 if (field != "title"):
-                    type = types[fields.index(field)]
+                    field_type  =        types[fields.index(field)]
                     field_value = field_values[fields.index(field)]
-                    if (type == "str"):
+                    if (field_type == "str"):
                         field_value = '"' + field_value.strip() + '"'
                     else:
-                        field_value = eval(f'{type}(field_value)')
+                        field_value = eval(f'{field_type}(field_value)')
                     field += '"'
                     print(f'  "{field:{max_field_width}s}: {field_value},', file=outfile)
 
             # if raw.txt file contains a "title" field, try to parse it
             if ("title" in fields):
-                title = field_values[fields.index("title")]
-                raw_title = title.strip() # .replace('\n', '').replace('\r', '').replace('\t', ' ')
-
-                # split the post title at " - " or " — " or " -- ", etc.
-                # this gives us the artist at [0] and everything else at [2]
-                split_title = re.split(' (-|—)+ ', raw_title, 1) # only split 1 time
-                artist = split_title[0]
-                song = split_title[2]
+                raw_title = field_values[fields.index("title")].strip()
+                artist, song = reddit.split_title(raw_title)
 
                 # extract the [subgenre] tag, if there is one
                 subgenre = ""
-                subgenre_match = re.search('\[.+\]', song)
+                subgenre_match = re.search(r'\[.+\]', song)
                 if (subgenre_match != None):
-                    (start, end) = subgenre_match.span()
+                    (start, _) = subgenre_match.span()
 
                     # song[end:] contains commentary after the [subgenre] -- remove
                     song = (song[:start]).strip()
-                    subgenre = re.sub('[\[\]]', '', subgenre_match.group())
+                    subgenre = re.sub(r'[\[\]]', '', subgenre_match.group())
 
                 # extract "junk" parentheticals like (live), (1998), etc.
-                (song, junk) = extract.misc_parentheticals(song)
+                (song, _) = extract.misc_parentheticals(song)
 
                 # remove "" from around song title, if present
                 if (song[0] == '"' and song[-1] == '"'):
@@ -113,11 +160,32 @@ else:
 
         print('}]', file=outfile)
 
+        if (export):
+            infile.close()
+            outfile.close()
 
+# command-line testing
+if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0] and sys.argv[1] == "posts"):
 
+    # set limit on number of posts to fetch / parse
+    if (len(sys.argv) > 3 and sys.argv[3].isdigit()):
+        limit = int(sys.argv[3])
+    else:
+        limit = None
 
-# all relevant fields
-#for submission in data.top("all", limit=10): # None
-#    print(index," :: ",submission.title," :: ",submission.created_utc," :: ",submission.link_flair_text," :: ",submission.score," :: ",submission.upvote_ratio," :: ",submission.author)
-#    index += 1
+    if (len(sys.argv) > 2):
 
+        # fetch posts only
+        if (sys.argv[2] == "fetch"):
+            print("\nfetching posts...\n")
+            posts(limit, True, False, False)
+
+        # fetch and parse posts
+        elif (sys.argv[2] == "parse"):
+            print("\nfetching and parsing posts...\n")
+            posts(limit, True, True, False)
+            
+        # fetch, parse, and save posts to files
+        elif (sys.argv[2] == "save"):
+            print("\nfetching, parsing, and saving posts...\n")
+            posts(limit, True, True, True)

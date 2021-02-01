@@ -6,3 +6,4 @@ out
 parsed.json
 raw.txt
 .DS_Store
+.vscode
