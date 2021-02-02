@@ -1,16 +1,14 @@
-import os, sys, json
+import os, sys, json, pathlib
 import matplotlib.pyplot as plt
 from collections import Counter
 
+basedir = pathlib.Path(__file__).parent
+
+#===============================================================================
+
 username = sys.argv[1]
 
-# get path relative to *this file*, not relative to user's current directory
-def relpath (file):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    return os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
-
-with open(relpath('data/posts_parsed.json'), 'r') as f:
+with (basedir / 'data/posts_parsed.json').open('r') as f:
     posts = json.load(f)
 
 counts = Counter([post['link_flair_text'] for post in posts if post['author'] == username])
@@ -27,5 +25,5 @@ ax1.pie(
     pctdistance=0.9,
     labeldistance=1.1)
 
-plt.savefig(relpath(f'plots/pie_genre_for_{username}.png'), dpi=100)
+plt.savefig(basedir / f'plots/pie_genre_for_{username}.png', dpi=100)
 #plt.show()

@@ -10,3 +10,4 @@ raw.txt
 posts_parsed.json
 posts_raw.txt
 scripts/data
+traffic*.json

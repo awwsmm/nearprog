@@ -1,18 +1,7 @@
-import os, sys, json, re
+import os, sys, json, re, pathlib
 import praw # pip3 install praw
 
-#===============================================================================
-#
-#  utilities
-#
-#===============================================================================
-
-# open file relative to *this file*, not relative to user's current directory
-def relopen (file, rw='r'):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    filepath = os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
-    return open(filepath, rw)
+basedir = pathlib.Path(__file__).parent
 
 #===============================================================================
 #
@@ -43,7 +32,7 @@ def relopen (file, rw='r'):
 #===============================================================================
 
 def connect():
-    with relopen('../../json/config.json') as f:
+    with (basedir / '../../json/config.json').open('r') as f:
         config = json.load(f)
 
     reddit = praw.Reddit(

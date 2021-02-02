@@ -1,20 +1,9 @@
-import os, sys, json, re
+import os, sys, json, re, datetime, pathlib
 
 from tools import reddit
 from tools import extract
 
-#===============================================================================
-#
-#  utilities
-#
-#===============================================================================
-
-# open file relative to *this file*, not relative to user's current directory
-def relopen (file, rw='r'):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    filepath = os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
-    return open(filepath, rw)
+basedir = pathlib.Path(__file__).parent
 
 #===============================================================================
 #
@@ -76,7 +65,7 @@ def posts(limit = None, fetch = True, parse = True, export = True):
 
         # export to output file as optional side effect
         if (export):
-            with relopen(out_raw, 'w') as outfile:
+            with (basedir / out_raw).open('w') as outfile:
                 for row in fetched_posts:
                     print(row, file=outfile)
 
@@ -91,8 +80,8 @@ def posts(limit = None, fetch = True, parse = True, export = True):
         max_field_width = max(len(max(fields, key=len)), len("raw_title")) + 2
 
         if (export):
-            infile = relopen(out_raw, 'r')
-            outfile = relopen(out_parsed, 'w')
+            infile = (basedir / out_raw).open('r')
+            outfile = (basedir / out_parsed).open('w')
         else:
             infile = fetched_posts
             outfile = sys.stdout
@@ -174,11 +163,13 @@ def posts(limit = None, fetch = True, parse = True, export = True):
 
 # fetch and save traffic data
 def traffic(export = True):
+    dt = datetime.datetime.today()
 
-    out = "data/traffic.json"
+    # Reddit only saves hourly traffic data for the past ~3 days
+    out = f"traffic_{dt.year}-{dt.month:02}-{dt.day:02}_{(dt.hour-1):02}h.json"
 
     if (export):
-        outfile = relopen(out, 'w')
+        outfile = (basedir / "data" / out).open('w')
     else:
         outfile = sys.stdout
         
@@ -191,6 +182,15 @@ def traffic(export = True):
     print(json.dumps(traffic), file=outfile)
 
     if (export):
+        # set up an anacron job to pull this daily, but always point to the newest one
+        symlink = "traffic_newest.json"
+
+        try:
+            os.unlink(basedir / "data" / symlink)
+        except Exception:
+            pass
+        
+        os.symlink(out, basedir / "data" / symlink)
         outfile.close()
 
 # command-line testing

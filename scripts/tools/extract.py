@@ -1,4 +1,6 @@
-import os, sys, json, re
+import os, sys, json, re, pathlib
+
+basedir = pathlib.Path(__file__).parent
 
 #===============================================================================
 #
@@ -25,13 +27,6 @@ def tests(arr):
             else:
                 print(f"  ❌ {expr} != {expected}")
                 print(f"      found: {actual}")
-
-# open file relative to *this file*, not relative to user's current directory
-def relopen (file, rw='r'):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    filepath = os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
-    return open(filepath, rw)
 
 # flatten an array of arrays, ex. [[1, 2], [3], [4, 5, 6]] => [1, 2, 3, 4, 5, 6]
 def flatten(arrarr):
@@ -86,7 +81,7 @@ def multiple_artists(artist):
     artists = re.split(r'\s+[Ff]eat.\s*|\s+[Ff]t.\s*', artist)
 
     # don't split artist names like "Black Country, New Road" and "Simon and Garfunkel"
-    with relopen('../../json/compound_artists.json') as f:
+    with (basedir / '../../json/compound_artists.json').open('r') as f:
         compound_artists = json.load(f)
 
     # split if not a compound artist
@@ -133,7 +128,7 @@ tests([
 def parenthetical_subgenre(song):
 
     # try to parse (subgenre) like [subgenre]
-    with relopen('../../json/genre_words.json') as f:
+    with (basedir / '../../json/genre_words.json').open('r') as f:
         genre_words = json.load(f)
 
     # return True if this word is a "genre word"

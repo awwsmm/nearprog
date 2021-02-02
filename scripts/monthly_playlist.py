@@ -1,20 +1,9 @@
-import os, sys, json, re, datetime
+import os, sys, json, re, datetime, pathlib
 
 from tools import reddit
 from tools import extract
 
-#===============================================================================
-#
-#  utilities
-#
-#===============================================================================
-
-# open file relative to *this file*, not relative to user's current directory
-def relopen (file, rw='r'):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    filepath = os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
-    return open(filepath, rw)
+basedir = pathlib.Path(__file__).parent
 
 #===============================================================================
 #
@@ -35,9 +24,9 @@ def playlist(test_mode):
     if (test_mode):
         outfile = sys.stdout
     else:
-        outfile = relopen(f'../monthly_playlist/{dt.year}-{dt.month:02}-{dt.day:02}.txt', 'w')
+        outfile = (basedir / f'../monthly_playlist/{dt.year}-{dt.month:02}-{dt.day:02}.txt').open('w')
 
-    with relopen('../json/banned_songs.json') as f:
+    with (basedir / '../json/banned_songs.json').open('r') as f:
         banned_songs = json.load(f)
 
     def is_banned(artist, song):

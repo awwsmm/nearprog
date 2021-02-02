@@ -1,7 +1,8 @@
+import sys
 from collections import defaultdict
 from statistics import mean, stdev
+
 from tools import reddit
-import sys
 
 #===============================================================================
 #

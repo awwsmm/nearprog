@@ -1,16 +1,22 @@
-import os, json
+import json, pathlib
 import matplotlib.pyplot as plt
 from collections import Counter
+from datetime import datetime
 
-# get path relative to *this file*, not relative to user's current directory
-def relpath (file):
-    basedir = os.getcwd()
-    scriptpath = __file__
-    return os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
+basedir = pathlib.Path(__file__).parent
 
-with open(relpath('data/traffic.json'), 'r') as f:
+#===============================================================================
+
+with (basedir / 'data/traffic_newest.json').open('r') as f:
     traffic = json.load(f)
 
-hour = traffic["hour"]
-  
-print(hour)
+hour = traffic["day"]
+timestamps, unique_pageviews, total_pageviews, users = zip(*hour)
+
+# convert UNIX timestamps to datetime objects
+datetimes = list(map(lambda x: datetime.utcfromtimestamp(x), timestamps))
+
+print(datetimes)
+print(unique_pageviews)
+print(total_pageviews)
+print(users)
