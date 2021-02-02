@@ -1,12 +1,15 @@
+import os, json
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from statistics import median
-import json
 
-import parent # import parent directory scripts
-import files  # ...which includes this
+# get path relative to *this file*, not relative to user's current directory
+def relpath (file):
+    basedir = os.getcwd()
+    scriptpath = __file__
+    return os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
 
-with files.relopen('output/parsed.json') as f:
+with open(relpath('data/posts_parsed.json'), 'r') as f:
     posts = json.load(f)
 
 counts = [(post['link_flair_text'], post['score'], post['upvote_ratio']) for post in posts]
@@ -59,5 +62,5 @@ plt.xticks(rotation=90)
 plt.legend()
 plt.tight_layout()
 
-plt.savefig(parent.relpath('output/upvotes_downvotes_by_genre.png'), dpi=100)
+plt.savefig(relpath('plots/upvotes_downvotes_by_genre.png'), dpi=100)
 #plt.show()

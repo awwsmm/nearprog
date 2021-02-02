@@ -1,11 +1,14 @@
+import os, json
 import matplotlib.pyplot as plt
-import json
 from collections import Counter
 
-import parent # import parent directory scripts
-import files  # ...which includes this
+# get path relative to *this file*, not relative to user's current directory
+def relpath (file):
+    basedir = os.getcwd()
+    scriptpath = __file__
+    return os.path.abspath(os.path.join(basedir, scriptpath, '../', file))
 
-with files.relopen('output/parsed.json') as f:
+with open(relpath('data/posts_parsed.json'), 'r') as f:
     posts = json.load(f)
 
 counts = Counter([post['link_flair_text'] for post in posts])
@@ -27,5 +30,5 @@ ax1.pie(
     pctdistance=0.9,
     labeldistance=1.05)
 
-plt.savefig(parent.relpath('output/pie_genre.png'), dpi=100)
+plt.savefig(relpath('plots/pie_genre.png'), dpi=100)
 #plt.show()

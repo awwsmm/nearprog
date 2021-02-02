@@ -38,6 +38,14 @@ def relopen (file, rw='r'):
 #  to pull and parse posts and save to raw and parsed output files, do
 #    $ python3 path/to/pull_data.py posts save [N]
 #
+#-------------------------------------------------------------------------------
+#
+#  to test fetching traffic data from Reddit, do
+#    $ python3 path/to/pull_data.py traffic
+#
+#  to fetch traffic data and save to an output file, do
+#    $ python3 path/to/pull_data.py traffic save
+#
 #===============================================================================
 
 # fetch and parse post data
@@ -164,28 +172,59 @@ def posts(limit = None, fetch = True, parse = True, export = True):
             infile.close()
             outfile.close()
 
-# command-line testing
-if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0] and sys.argv[1] == "posts"):
+# fetch and save traffic data
+def traffic(export = True):
 
-    # set limit on number of posts to fetch / parse
-    if (len(sys.argv) > 3 and sys.argv[3].isdigit()):
-        limit = int(sys.argv[3])
+    out = "data/traffic.json"
+
+    if (export):
+        outfile = relopen(out, 'w')
     else:
-        limit = None
+        outfile = sys.stdout
+        
+    # traffic is *much* easier as it's already json formatted
+    # ...and requires no parsing
 
-    if (len(sys.argv) > 2):
+    data = reddit.nearprog()
+    traffic = data.traffic()
 
-        # fetch posts only
-        if (sys.argv[2] == "fetch"):
-            print("\nfetching posts...\n")
-            posts(limit, True, False, False)
+    print(json.dumps(traffic), file=outfile)
 
-        # fetch and parse posts
-        elif (sys.argv[2] == "parse"):
-            print("\nfetching and parsing posts...\n")
-            posts(limit, True, True, False)
-            
-        # fetch, parse, and save posts to files
-        elif (sys.argv[2] == "save"):
-            print("\nfetching, parsing, and saving posts...\n")
-            posts(limit, True, True, True)
+    if (export):
+        outfile.close()
+
+# command-line testing
+if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0]):
+
+    if (sys.argv[1] == "posts"):
+
+        # set limit on number of posts to fetch / parse
+        if (len(sys.argv) > 3 and sys.argv[3].isdigit()):
+            limit = int(sys.argv[3])
+        else:
+            limit = None
+
+        if (len(sys.argv) > 2):
+
+            # fetch posts only
+            if (sys.argv[2] == "fetch"):
+                print("\nfetching posts...\n")
+                posts(limit, True, False, False)
+
+            # fetch and parse posts
+            elif (sys.argv[2] == "parse"):
+                print("\nfetching and parsing posts...\n")
+                posts(limit, True, True, False)
+                
+            # fetch, parse, and save posts to files
+            elif (sys.argv[2] == "save"):
+                print("\nfetching, parsing, and saving posts...\n")
+                posts(limit, True, True, True)
+
+    elif (sys.argv[1] == "traffic"):
+        if (len(sys.argv) > 2 and sys.argv[2] == "save"):
+            print("\nfetching and saving traffic data...\n")
+            traffic(True)
+        else:
+            print("\nfetching traffic data...\n")
+            traffic(False)
