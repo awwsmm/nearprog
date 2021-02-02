@@ -7,3 +7,6 @@ parsed.json
 raw.txt
 .DS_Store
 .vscode
+posts_parsed.json
+posts_raw.txt
+scripts/data
