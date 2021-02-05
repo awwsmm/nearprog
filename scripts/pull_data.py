@@ -1,4 +1,5 @@
-import os, sys, json, re, datetime, pathlib
+import os, sys, json, re, datetime, pathlib, jsonmerge, glob
+from functools import reduce
 
 from tools import reddit
 from tools import extract
@@ -179,10 +180,17 @@ def traffic(export = True):
     data = reddit.nearprog()
     traffic = data.traffic()
 
-    print(json.dumps(traffic), file=outfile)
+    # print this new traffic data to a new file
+    output = json.dumps(traffic, indent=2)
+    output = re.sub(r'  \[\s+',      r'  [',  output)
+    output = re.sub(r'([0-9]),\s+',  r'\1, ', output)
+    output = re.sub(r'([0-9])\s+\]', r'\1]',  output)
+    print(output, file=outfile)
+
+    outfile.close()
 
     if (export):
-        # set up an anacron job to pull this daily, but always point to the newest one
+        # set up a symbolic link to the newest file
         symlink = "traffic_newest.json"
 
         try:
@@ -191,7 +199,52 @@ def traffic(export = True):
             pass
         
         os.symlink(out, basedir / "data" / symlink)
-        outfile.close()
+
+        # then, get all new and existing traffic files
+        all_traffic_files = sorted(glob.glob(str(basedir / "data" / "traffic_20*h.json")), reverse=True)
+
+        def file_to_dict(filename):
+            with open(filename, 'r') as infile:
+                return json.load(infile)
+
+        # ...read them all in as dictionaries
+        all_traffic_json = list(map(lambda x: file_to_dict(x), all_traffic_files))
+
+        # merge arrays by blindly appending all values
+        schema = { "properties": {
+            "day": { "mergeStrategy": "append" },
+            "hour": { "mergeStrategy": "append" },
+            "month": { "mergeStrategy": "append" }
+            } }
+
+        # merge all traffic files
+        merger = jsonmerge.Merger(schema)
+        merged = reduce(lambda x, y: merger.merge(x, y), all_traffic_json)
+
+        # remove duplicate-timestamped sublists
+        def dedup(list_of_lists):
+            deduped = list()
+            timestamps = set()
+            for sublist in list_of_lists:
+                timestamp = sublist[0]
+                if timestamp not in timestamps:
+                    deduped.append(sublist)
+                    timestamps.add(timestamp)
+            return deduped
+
+        # remove duplicate timestamps in "hour", "day", and "month" individually
+        merged = { key:dedup(value) for (key, value) in merged.items() }
+
+        # sort in-place
+        [merged[key].sort(reverse = True) for key in merged]
+
+        # export merged data to file
+        with (basedir / "data" / "traffic_merged.json").open('w') as mfile:
+            output = json.dumps(merged, indent=2)
+            output = re.sub(r'  \[\s+',      r'  [',  output)
+            output = re.sub(r'([0-9]),\s+',  r'\1, ', output)
+            output = re.sub(r'([0-9])\s+\]', r'\1]',  output)
+            print(output, file=mfile)
 
 # command-line testing
 if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0]):

@@ -12,9 +12,10 @@ basedir = pathlib.Path(__file__).parent
 #-------------------------------------------------------------------------------
 #
 #  to test without writing the playlist to a file, do
-#    $ python3 path/to/monthly_playlist.py test
+#    $ python3 path/to/monthly_playlist.py
 #
-#  ...to save the playlist to a file, drop the "test" argument
+#  ...to save the playlist to a file, do
+#    $ python3 path/to/monthly_playlist.py save
 #
 #===============================================================================
 
@@ -50,7 +51,8 @@ def playlist(test_mode):
         outfile.close()
 
 # command-line testing
-if (len(sys.argv) == 2 and "monthly_playlist.py" in sys.argv[0] and sys.argv[1] == "test"):
-    playlist(True)
-else:
-    playlist(False)
+if (len(sys.argv) == 2 and "monthly_playlist.py" in sys.argv[0]):
+    if (sys.argv[1] == "save"):
+        playlist(False)
+    else:
+        playlist(True)

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.nearprog.daily_traffic.plist</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>UserName</key>
+    <string>awwsmm</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/python3</string>
+        <string>/Users/awwsmm/Git/nearprog/scripts/pull_data.py</string>
+        <string>traffic</string>
+        <string>save</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>10</integer>
+        <key>Minute</key>
+        <integer>45</integer>
+    </dict>
+</dict>
+</plist>
