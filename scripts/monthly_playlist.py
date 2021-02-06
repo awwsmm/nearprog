@@ -19,7 +19,7 @@ basedir = pathlib.Path(__file__).parent
 #
 #===============================================================================
 
-def playlist(test_mode):
+def playlist(test_mode = True):
     dt = datetime.datetime.today()
 
     if (test_mode):

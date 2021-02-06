@@ -1,10 +1,13 @@
 import os, sys, json, re, datetime, pathlib, jsonmerge, glob
 from functools import reduce
+from operator import itemgetter
 
 from tools import reddit
 from tools import extract
 
 basedir = pathlib.Path(__file__).parent
+connection = reddit.connect()
+nearprog = connection.subreddit("nearprog")
 
 #===============================================================================
 #
@@ -36,12 +39,18 @@ basedir = pathlib.Path(__file__).parent
 #  to fetch traffic data and save to an output file, do
 #    $ python3 path/to/pull_data.py traffic save
 #
+#-------------------------------------------------------------------------------
+#
+#  to test fetching promotion post data from Reddit, do
+#    $ python3 path/to/pull_data.py promotions
+#
+#  to fetch promotion post data and save to an output file, do
+#    $ python3 path/to/pull_data.py promotions save
+#
 #===============================================================================
 
 # fetch and parse post data
-def posts(limit = None, fetch = True, parse = True, export = True):
-    data = reddit.nearprog()
-
+def posts(limit = None, fetch = True, parse = True, export = False):
     typed_fields = [("str",   "title"),
                     ("float", "created_utc"),
                     ("str",   "link_flair_text"),
@@ -60,7 +69,7 @@ def posts(limit = None, fetch = True, parse = True, export = True):
             return list(map(lambda x: str(getattr(submission, x)), fields))
             
         # fetch post fields and separate with double semicolons (;;)
-        all_posts = data.top("all", limit=limit)
+        all_posts = nearprog.top("all", limit=limit)
         song_posts = filter(lambda x: reddit.submission_is_song(x), all_posts)
         fetched_posts = [";;".join(get_fields(post)) for post in song_posts]
 
@@ -163,7 +172,7 @@ def posts(limit = None, fetch = True, parse = True, export = True):
             outfile.close()
 
 # fetch and save traffic data
-def traffic(export = True):
+def traffic(export = False):
     dt = datetime.datetime.today()
 
     # Reddit only saves hourly traffic data for the past ~3 days
@@ -176,9 +185,7 @@ def traffic(export = True):
         
     # traffic is *much* easier as it's already json formatted
     # ...and requires no parsing
-
-    data = reddit.nearprog()
-    traffic = data.traffic()
+    traffic = nearprog.traffic()
 
     # print this new traffic data to a new file
     output = json.dumps(traffic, indent=2)
@@ -246,6 +253,29 @@ def traffic(export = True):
             output = re.sub(r'([0-9])\s+\]', r'\1]',  output)
             print(output, file=mfile)
 
+# pull some data about a post, given its URL; always return as a dict
+def from_url(url):
+    post = connection.submission(url=url)
+    attrs = ["author", "created_utc", "num_comments", "score", "subreddit", "title", "upvote_ratio", "url"]
+    return { attr:str(getattr(post, attr)) for attr in attrs }
+
+# pull information about multiple posts from their URLs; return as a list(dict)
+def from_urls(urls):
+    return [from_url(url) for url in urls]
+
+# pull information about promotion posts from URLs in data file
+def promotions(export = False):
+    with (basedir / "data" / "promotion_posts.txt").open('r') as infile:
+        urls = [line for line in infile]
+    promos = sorted(from_urls(urls), key=itemgetter('created_utc'))
+    promos_json = json.dumps(promos, indent=2)
+
+    if (export):
+        with (basedir / "data" / "promotion_posts.json").open('w') as outfile:
+            print(promos_json, file=outfile)
+    else:
+        print(promos_json)
+
 # command-line testing
 if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0]):
 
@@ -254,6 +284,8 @@ if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0]):
         # set limit on number of posts to fetch / parse
         if (len(sys.argv) > 3 and sys.argv[3].isdigit()):
             limit = int(sys.argv[3])
+            print(f"\nNote: limit provided ({limit}) is the *maximum* number of posts to be returned.")
+            print(f"  Actual number returned may be < {limit} due to discussion posts being removed.")
         else:
             limit = None
 
@@ -261,23 +293,35 @@ if (len(sys.argv) > 1 and "pull_data.py" in sys.argv[0]):
 
             # fetch posts only
             if (sys.argv[2] == "fetch"):
-                print("\nfetching posts...\n")
+                print("\nFetching posts...\n")
                 posts(limit, True, False, False)
 
             # fetch and parse posts
             elif (sys.argv[2] == "parse"):
-                print("\nfetching and parsing posts...\n")
+                print("\nFetching and parsing posts...\n")
                 posts(limit, True, True, False)
                 
             # fetch, parse, and save posts to files
             elif (sys.argv[2] == "save"):
-                print("\nfetching, parsing, and saving posts...\n")
+                print("\nFetching, parsing, and saving posts...\n")
                 posts(limit, True, True, True)
+        
+        else:
+            print("\n'posts' must be followed by 'fetch', 'parse', or 'save'")
+            print("  and an optional number of posts, like 'posts fetch 3'")
 
     elif (sys.argv[1] == "traffic"):
         if (len(sys.argv) > 2 and sys.argv[2] == "save"):
-            print("\nfetching and saving traffic data...\n")
+            print("\nFetching and saving traffic data...\n")
             traffic(True)
         else:
-            print("\nfetching traffic data...\n")
+            print("\nFetching traffic data...\n")
             traffic(False)
+    
+    elif (sys.argv[1] == "promotions"):
+        if (len(sys.argv) > 2 and sys.argv[2] == "save"):
+            print("\nFetching and saving promotion post data...\n")
+            promotions(True)
+        else:
+            print("\nFetching promotion post data...\n")
+            promotions(False)

@@ -70,11 +70,13 @@ def findAndEvaluate (search_term, iterations = 5):
     info = defaultdict(list)
 
     print(f"Collecting data (x{iterations})...\n")
+
+    connection = reddit.connect()
     for i in range(iterations):
         print(f"Loop {i+1} / {iterations}")
 
         # pull the submission in every loop so Reddit refreshes the fuzzed votes
-        contest = reddit.connect().submission(url=submission.url)
+        contest = connection.submission(url=submission.url)
 
         # remove second-level comments and "More Comments" messages
         contest.comments.replace_more(limit=None)
