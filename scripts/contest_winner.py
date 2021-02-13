@@ -1,6 +1,7 @@
 import sys
 from collections import defaultdict
 from statistics import mean, stdev
+from random import randrange
 
 from tools import reddit
 
@@ -54,7 +55,7 @@ def findAndEvaluate (search_term, iterations = 5):
                 sys.exit(0)
             elif (decision.isdigit()):
                 number = int(decision)
-                if (number > 0 and number < n_results):
+                if (number >= 0 and number < n_results):
                     submission_index = number
                     break
 
@@ -69,11 +70,12 @@ def findAndEvaluate (search_term, iterations = 5):
     # where [comment score] is an array
     info = defaultdict(list)
 
-    print(f"Collecting data (x{iterations})...\n")
+    # remove mods from the running
+    mods = ["MysteriousGear", "_awwsmm"]
 
     connection = reddit.connect()
     for i in range(iterations):
-        print(f"Loop {i+1} / {iterations}")
+        print(f"Collecting data ({i+1}/{iterations})...", end="\r")
 
         # pull the submission in every loop so Reddit refreshes the fuzzed votes
         contest = connection.submission(url=submission.url)
@@ -83,11 +85,12 @@ def findAndEvaluate (search_term, iterations = 5):
 
         # loop over all top-level comments
         for comment in contest.comments:
-            id = comment.permalink
-            info[id].append(comment.score)
+            if (comment.author not in mods):
+                id = comment.permalink
+                info[id].append(comment.score)
 
-    # get average
-    print("")
+    # clear the "Collecting data" line; get average
+    print("                                                         ", end="\r")
     def average_and_stdev(permalink_and_values):
         return (permalink_and_values[0], (mean(permalink_and_values[1]), stdev(permalink_and_values[1])))
 
@@ -95,11 +98,32 @@ def findAndEvaluate (search_term, iterations = 5):
     tuples = list(map(average_and_stdev, info.items()))
     ranked = sorted(tuples, key = lambda x: x[1][0], reverse = True)
 
-    for link, (avg, dev) in ranked:
-        print(f"{avg:.2f} w/ {dev:.2f} => {link}")
+    # get winning score by rounding max mean value
+    winning_score = round(ranked[0][1][0])
+    print(f"The winning score is {winning_score} upvotes.\n")
 
-# to do: add functionality to automatically determine winner,
-#        and randomly choose a winner if there is a tie
+    # print out the rankings
+    for link, (avg, dev) in ranked:
+        if (round(avg) == winning_score):
+            star = " * "
+        else:
+            star = "   "
+        comment_id = link.split('/')[-2]
+        print(f"{star}{avg:.2f} ± {dev:.2f} | {comment_id}")
+
+    # determine if there's a tie for first place
+    num_winners = list(map(lambda x: round(x[1][0]), ranked)).count(winning_score)
+
+    # if there is a tie, pick a winner at random
+    if (num_winners > 1):
+        print(f"\nThere's a {num_winners}-way tie for first place.")
+        print("The winner will be chosen at random.")
+        winning_index = randrange(num_winners)
+    else:
+        winning_index = 0
+
+    print("\nThe winning submission is")
+    print(f"  https://www.reddit.com{ranked[winning_index][0]}")
 
 # command-line testing
 if (len(sys.argv) > 1 and "contest_winner.py" in sys.argv[0]):
