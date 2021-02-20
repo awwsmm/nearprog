@@ -51,8 +51,8 @@ def playlist(test_mode = True):
         outfile.close()
 
 # command-line testing
-if (len(sys.argv) == 2 and "monthly_playlist.py" in sys.argv[0]):
-    if (sys.argv[1] == "save"):
+if ("monthly_playlist.py" in sys.argv[0]):
+    if (len(sys.argv) == 2 and sys.argv[1] == "save"):
         playlist(False)
     else:
         playlist(True)

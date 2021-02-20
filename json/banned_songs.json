@@ -1,33 +1,45 @@
 [
   {
-    "artist": "Styx",
-    "song":   "Fooling Yourself"
-  }, {
-    "artist": "King Gizzard and the Lizard Wizard",
-    "song":   "Loyalty"
+    "artist": "Arch Echo",
+    "song":   "Hip Dipper"
   }, {
     "artist": "Baroness",
     "song":   "O'er Hell and Hide"
   }, {
-    "artist": "The Mercury Tree",
-    "song":   "Exhume the Worst"
-  }, {
-    "artist": "The Mars Volta",
-    "song":   "Tetragrammaton"
-  }, {
-    "artist": "The Sound of Animals Fighting",
-    "song":   "Chasing Suns"
-  }, {
-    "artist": "Seth Angerer",
-    "song":   "THE BLIND IDIOT GOD"
-  }, {
-    "artist": "Tiberius",
-    "song":   "Swansong"
+    "artist": "Blue Oyster Cult",
+    "song":   "Black Blade"
   }, {
     "artist": "Chicago",
     "song":   "Ballet for a Girl in Buchannon"
   }, {
+    "artist": "King Gizzard and the Lizard Wizard",
+    "song":   "Loyalty"
+  }, {
+    "artist": "Seth Angerer",
+    "song":   "The Blind Idiot God"
+  }, {
+    "artist": "Sleep Token",
+    "song":   "Dark Signs"
+  }, {
     "artist": "Sleepytime Gorilla Museum",
     "song":   "Ambugaton"
+  }, {
+    "artist": "Styx",
+    "song":   "Fooling Yourself"
+  }, {
+    "artist": "The Dear Hunter",
+    "song":   "Gloria"
+  }, {
+    "artist": "The Mars Volta",
+    "song":   "Tetragrammaton"
+  }, {
+    "artist": "The Mercury Tree",
+    "song":   "Exhume the Worst"
+  }, {
+    "artist": "The Sound of Animals Fighting",
+    "song":   "Chasing Suns"
+  }, {
+    "artist": "Tiberius",
+    "song":   "Swansong"
   }
 ]
