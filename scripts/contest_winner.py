@@ -1,7 +1,7 @@
 import sys, argparse
 from collections import defaultdict
 from statistics import mean, stdev
-from random import randrange
+from random import randrange, random
 
 from tools import reddit
 
@@ -123,62 +123,25 @@ def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
             total_score = total_upvotes - n_submissions
             final_scores.setdefault(user, (n_submissions, total_upvotes, total_score))
 
-        # sort users by final_score
-        ranked = sorted(final_scores.items(), key = lambda x: x[1][2], reverse = True)
-        winning_score = round(ranked[0][1][2])
-        print(f"The winning score is {winning_score}.\n")
+        # sort users by final_score, then randomly (if rounded scores are equal)
+        ranked = sorted(final_scores.items(), key = lambda x: (round(x[1][2]), random()), reverse = True)
 
         # print out the rankings
+        rank = 1
         for user, (n, upvotes, score) in ranked:
-            if (round(score) == winning_score):
-                star = " * "
-            else:
-                star = "   "
-            print(f"{star}{score:.2f} | {user}, with {n} comments and {upvotes:.2f} total upvotes")
-
-        # determine if there's a tie for first place
-        num_winners = list(map(lambda x: round(x[1][2]), ranked)).count(winning_score)
-
-        # if there is a tie, pick a winner at random
-        if (num_winners > 1):
-            print(f"\nThere's a {num_winners}-way tie for first place.")
-            print("The winner will be chosen at random.")
-            winning_index = randrange(num_winners)
-        else:
-            winning_index = 0
-
-        print("\nThe winning user is")
-        print(f"  {ranked[winning_index][0]}")
+            print(f"  {rank:2d} @ {score:2d} (== {upvotes:2d} - {n:2d}) | {user}")
+            rank += 1
 
     # single-comment ("normal") mode
     else:
-        ranked = sorted(tuples.items(), key = lambda x: x[1][0], reverse = True)
-
-        # get winning score by rounding max mean value
-        winning_score = round(ranked[0][1][0])
-        print(f"The winning score is {winning_score} upvotes.\n")
+        # sort comments by rounding (mean+stdev) value, then randomly (if rounded scores are equal)
+        ranked = sorted(tuples.items(), key = lambda x: (round(x[1][0] + x[1][1]), random()), reverse = True)
 
         # print out the rankings
+        rank = 1
         for comment_id, (avg, dev) in ranked:
-            if (round(avg) == winning_score):
-                star = " * "
-            else:
-                star = "   "
-            print(f"{star}{avg:.2f} ± {dev:.2f} | {comment_id}")
-
-        # determine if there's a tie for first place
-        num_winners = list(map(lambda x: round(x[1][0]), ranked)).count(winning_score)
-
-        # if there is a tie, pick a winner at random
-        if (num_winners > 1):
-            print(f"\nThere's a {num_winners}-way tie for first place.")
-            print("The winner will be chosen at random.")
-            winning_index = randrange(num_winners)
-        else:
-            winning_index = 0
-
-        print("\nThe winning comment is")
-        print(f"  {submission.url}{ranked[winning_index][0]}")
+            print(f"  {rank:2d} @ {avg:.2f} ± {dev:.2f} | {submission.url}{comment_id}")
+            rank += 1
 
 # command-line testing
 if (len(sys.argv) > 1 and "contest_winner.py" in sys.argv[0]):
