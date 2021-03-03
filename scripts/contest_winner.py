@@ -129,7 +129,7 @@ def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
         # print out the rankings
         rank = 1
         for user, (n, upvotes, score) in ranked:
-            print(f"  {rank:2d} @ {score:2d} (== {upvotes:2d} - {n:2d}) | {user}")
+            print(f"  {rank:2d} @ {score:2.2f} (== {upvotes:2.2f} - {n:2d}) | {user}")
             rank += 1
 
     # single-comment ("normal") mode
