@@ -1,5 +1,15 @@
+from tools import reddit
 
-from urllib.parse import quote_plus
+#===============================================================================
+#
+#  script to print a markdown-formatted table of post flairs for old Reddit
+#
+#-------------------------------------------------------------------------------
+#
+#  run with
+#    $ python3 path/to/old_reddit_flair_table.py
+#
+#===============================================================================
 
 def mdlink(text, url):
     " format a markdown link "
@@ -14,49 +24,19 @@ def format_table(fields, columns=3):
         row = fields[i:i+columns]
         row += [''] * (columns - len(row))
         print('|', '|'.join(row), '|')
-    
 
-## TODO add PRAW support?
+# get all currently-available post flairs
+link_templates = reddit.nearprog().flair.link_templates
+flairs = list(map(lambda x: x["text"], link_templates))
 
-flairs = [
-    "Acoustic & Flamenco",
-    "Alt Metal",
-    "Avant-Garde / Experimental",
-    "Bluegrass",
-    "Blues & Soul",
-    "Classical / Orchestral",
-    "Djent",
-    "Doom / Stoner",
-    "Electronic",
-    "Folk / Country",
-    "Funk",
-    "Gothic Country",
-    "House / EDM / Trap",
-    "Indie / Alternative",
-    "Industrial",
-    "Jam Band",
-    "Jazz / Big Band",
-    "Math Rock",
-    "Metal",
-    "Metalcore / Hardcore",
-    "New Wave",
-    "Pop / Baroque Pop",
-    "Post-Hardcore / Emo / Screamo",
-    "Post-Punk",
-    "Post-Rock",
-    "Proto-Prog",
-    "Psychedelic / Space Rock",
-    "Punk & Grunge",
-    "Rap & Hip Hop",
-    "Rock",
-    "Thrash & Death Metal",
-    "Virtuoso Instrumentalist",
-    "World / Traditional",
-    "Surprise Me!",
-]
+flairs.remove("Discussion")
+flairs.remove("Contest")
 
 baseurl = "https://old.reddit.com/r/nearprog/search?restrict_sr=on&q=flair%3A"
-# Search only works on single words.
-links = [mdlink(flair, baseurl + quote_plus(flair.split('/')[0].split()[0])) for flair in flairs]
-format_table(links, 3)
 
+def makeurl(search_term):
+    safe_term = search_term.replace(" ", "+").replace("&", "%26")
+    return f"{baseurl}%22{safe_term}%22"
+
+links = [mdlink(flair, makeurl(flair)) for flair in flairs]
+format_table(links, 3)
