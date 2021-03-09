@@ -50,6 +50,7 @@ def nearprog():
 def submission_is_song(submission):
     return ((submission.link_flair_text != 'Discussion') and
             (submission.link_flair_text != 'Contest') and
+            (submission.link_flair_text != 'Announcement') and
             ('[Discussion]' not in submission.title))
 
 def split_title(title):

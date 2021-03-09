@@ -266,7 +266,7 @@ def from_urls(urls):
 # pull information about promotion posts from URLs in data file
 def promotions(export = False):
     with (basedir / "data" / "promotion_posts.txt").open('r') as infile:
-        urls = [line for line in infile]
+        urls = list(set([line for line in infile]))
     promos = sorted(from_urls(urls), key=itemgetter('created_utc'))
     promos_json = json.dumps(promos, indent=2)
 
