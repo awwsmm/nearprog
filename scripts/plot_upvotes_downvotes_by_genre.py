@@ -1,4 +1,4 @@
-import os, json, pathlib, sys
+import os, json, pathlib, sys, argparse
 from collections import defaultdict
 from statistics import median
 import plotly.graph_objects as go
@@ -12,7 +12,7 @@ basedir = pathlib.Path(__file__).parent
 #-------------------------------------------------------------------------------
 #
 #  run with
-#    $ python3 path/to/plot_upvotes_downvotes_by_genre.py [save]
+#    $ python3 path/to/plot_upvotes_downvotes_by_genre.py [-h]
 #
 #-------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ def plot_upvotes_downvotes_by_genre(export = False):
     with (basedir / 'data/posts_parsed.json').open('r') as f:
         posts = json.load(f)
 
-    counts = [(post['link_flair_text'], post['score'], post['upvote_ratio']) for post in posts if post['author'] != "None"]
+    counts = [(post['link_flair_text'], post['score'], post['upvote_ratio']) for post in posts if (post['author'] != "None" and post['link_flair_text'] != "None" and post['link_flair_text'] != "TBD")]
 
     # group by genre, keep [upvote, downvote] tuples per post
     d = defaultdict(list)
@@ -66,7 +66,8 @@ def plot_upvotes_downvotes_by_genre(export = False):
         upvotes, downvotes, score, upvote_ratio = zip(*posts)
         tuples.append((genre, median(upvotes), -1*median(downvotes)))
 
-    tuples = sorted(tuples, key=lambda x: x[1])
+    # sort high-to-low by upvotes, then low-to-high by downvotes
+    tuples = sorted(tuples, key=lambda x: (x[1], x[2]))
     genres, upvotes, downvotes = zip(*tuples)
 
     fig = go.Figure()
@@ -86,13 +87,18 @@ def plot_upvotes_downvotes_by_genre(export = False):
     )
 
     if (export):
-        fig.write_image(str(basedir / f'plots/upvotes_downvotes_by_genre.svg')) # pip3 install kaleido
+        fig.write_image(str(basedir / f'plots/upvotes_downvotes_by_genre.png')) # pip3 install kaleido
     else:
         fig.show()
 
 # command-line testing
 if ("plot_upvotes_downvotes_by_genre.py" in sys.argv[0]):
-    if (len(sys.argv) > 1 and sys.argv[1] == "save"):
-        plot_upvotes_downvotes_by_genre(export=True)
-    else:
-        plot_upvotes_downvotes_by_genre()
+
+    desc = "Script to plot subreddit-wide median up/downvotes per post by genre."
+    parser = argparse.ArgumentParser(description=desc)
+
+    parser.add_argument('-s', dest="save", action='store_true',
+        help="[s]ave the plot to a PNG file")
+
+    args = parser.parse_args()
+    plot_upvotes_downvotes_by_genre(args.save)
