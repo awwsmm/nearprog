@@ -70,7 +70,7 @@ def posts(limit = None, fetch = True, parse = True, export = False):
             
         # fetch post fields and separate with double semicolons (;;)
         all_posts = nearprog.top("all", limit=limit)
-        song_posts = filter(lambda x: reddit.submission_is_song(x), all_posts)
+        song_posts = filter(lambda submission: reddit.is_song(submission), all_posts)
         fetched_posts = [";;".join(get_fields(post)) for post in song_posts]
 
         # export to output file as optional side effect
