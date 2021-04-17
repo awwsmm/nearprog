@@ -47,6 +47,10 @@ def top_songs(n: int, since: int, defuzz_iterations: int) -> List[Tuple[Submissi
     if (defuzz_iterations < 2):
         raise ValueError(f"'defuzz_iterations' must be >= 2")
 
+    dtobj = datetime.datetime.utcfromtimestamp(since)
+    print("\nFinding top songs posted to r/nearprog since " + dtobj.strftime('%Y-%m-%d %H:%M:%S'))
+    print(f"Returning {n} songs, with scores defuzzed {defuzz_iterations} times...")
+
     connection = reddit.connect()
 
     # fetch all song submissions since the given UTC UNIX timestamp
@@ -65,7 +69,7 @@ def top_songs(n: int, since: int, defuzz_iterations: int) -> List[Tuple[Submissi
 
     def read_playlist_file(filename: str) -> str:
         output = ""
-        with open(filename) as file:
+        with open(filename, encoding='utf-8') as file:
             output = file.read().replace('\n', '')
         return output
 
@@ -98,7 +102,7 @@ def top_songs(n: int, since: int, defuzz_iterations: int) -> List[Tuple[Submissi
     #  if any song appears in the list of banned songs, warn and remove it
     #---------------------------------------------------------------------------
 
-    with (basedir / '../json/banned_songs.json').open('r') as f:
+    with (basedir / '../json/banned_songs.json').open('r', encoding='utf-8') as f:
         banned_songs = json.load(f)
 
     def is_banned(artist, song):
@@ -138,7 +142,7 @@ def print_top_songs(n: int = 60, since: int = 1608937131, defuzz_iterations: int
     end = datetime.datetime.today()
 
     if (export):
-        outfile = (basedir / f'../monthly_playlist/{start.year}-{start.month:02}-{start.day:02}.txt').open('w')
+        outfile = (basedir / f'../monthly_playlist/{start.year}-{start.month:02}-{start.day:02}.txt').open('w', encoding='utf-8')
     else:
         outfile = sys.stdout
         print("") # skip a line for easier readability
