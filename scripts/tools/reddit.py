@@ -22,6 +22,8 @@ basedir = pathlib.Path(__file__).parent
 #               "password":      "your Reddit password"
 #             }
 #
+#  see: https://github.com/reddit-archive/reddit/wiki/OAuth2
+#
 #  to use this file in another file in this directory, add
 #    import nearprog        # for other files in this directory
 #    import tools.nearprog  # for files in the parent directory (scripts/)
@@ -36,17 +38,22 @@ basedir = pathlib.Path(__file__).parent
 #===============================================================================
 
 def connect() -> praw.Reddit:
-    with (basedir / '../../json/config.json').open('r') as f:
-        config = json.load(f)
+    try:
+        with (basedir / '../../json/config.json').open('r') as f:
+            config = json.load(f)
 
-    reddit = praw.Reddit(
-                 user_agent    = "nearprog_scraper by u/_awwsmm",
-                 client_id     = config['client_id'],
-                 client_secret = config['client_secret'],
-                 username      = config['username'],
-                 password      = config['password'])
+        reddit = praw.Reddit(
+                    user_agent    = "nearprog_scraper by u/_awwsmm",
+                    client_id     = config['client_id'],
+                    client_secret = config['client_secret'],
+                    username      = config['username'],
+                    password      = config['password'])
 
-    return reddit
+        return reddit
+    except:
+        print("\nERROR: json/config.json configuration file is missing")
+        print("       read source of scripts/tools/reddit.py for more details")
+        exit(1)
 
 def nearprog() -> Subreddit:
     """Returns a Subreddit instance for r/nearprog."""
