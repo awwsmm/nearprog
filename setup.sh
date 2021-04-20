@@ -5,4 +5,4 @@
 sudo -H python3 get-pip.py --force-reinstall
 
 # make sure praw is installed
-sudo -H python3 -m pip install praw
+sudo -H python3 -m pip install praw jsonmerge
