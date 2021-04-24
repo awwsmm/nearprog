@@ -1,65 +1,65 @@
-playlist generated at 1619268975, in 299 seconds, showing 60 submissions max
+playlist generated at 1619270221, in 301 seconds, showing 60 submissions max
          posted since 1616577086, with 100 defuzz iterations.
 Newest song posted at 1619208312 (in top 50 posts) ('Zeal & Ardor - Tuskegee [avant-garde black metal]').
 Oldest song posted at 1616579421 (in top 50 posts) ('Radiohead - The National Anthem').
 
-   1)  55.9^ | Them Crooked Vultures - Mind Eraser, No Chaser
+   1)  56.0^ | Them Crooked Vultures - Mind Eraser, No Chaser
    2)  45.0^ | King Gizzard And The Lizard Wizard - The Fourth Colour
    3)  39.9^ | Max Kelly - 'Filter' (Hybrid Drumming 4.0)
    4)  36.9^ | At The Drive-In - One Armed Scissor [post-hardcore / art punk]
-   5)  34.2^ | Herbie Hancock - Chameleon [jazz fusion]
-   6)  31.0^ | Iron Maiden - The Rime of the Ancient Mariner [heavy metal]
-   7)  30.8^ | Snarky Puppy - What About Me? [jazz fusion]
-   8)  29.1^ | Queens Of The Stone Age - Songs For The Dead
-   9)  29.0^ | Kyuss - Demon Cleaner
-  10)  28.0^ | Zeal & Ardor - Tuskegee [avant-garde black metal]
-  11)  26.1^ | Radiohead - The National Anthem
-  12)  26.0^ | Psychedelic Porn Crumpets - Tally Ho
-  13)  26.0^ | This Town Needs Guns - Chinchilla [math rock / emo]
-  14)  25.9^ | Mogwai - Glasgow Mega-Snake [heavy instrumental post-rock]
-  15)  25.1^ | mouse on the keys - spectres de mouse [math jazz]
-  16)  25.0^ | Dave Grohl - Play [rock]
-  17)  23.0^ | Yussef Kamaal - Strings of Light [jazz-funk]
-  18)  21.1^ | Spiritualized - Ladies and Gentlemen We Are Floating in Space [neo-psychedelic space rock]
-  19)  20.8^ | Gogol Bordello - Immigraniada (We Comin' Rougher) [gypsy punk]
-  20)  20.1^ | Puscifer - Green Valley [alt rock / industrial]
+   5)  34.1^ | Herbie Hancock - Chameleon [jazz fusion]
+   6)  31.1^ | Snarky Puppy - What About Me? [jazz fusion]
+   7)  29.0^ | Queens Of The Stone Age - Songs For The Dead
+   8)  29.0^ | Kyuss - Demon Cleaner
+   9)  28.2^ | Zeal & Ardor - Tuskegee [avant-garde black metal]
+  10)  26.1^ | Psychedelic Porn Crumpets - Tally Ho
+  11)  26.0^ | Radiohead - The National Anthem
+  12)  25.9^ | Mogwai - Glasgow Mega-Snake [heavy instrumental post-rock]
+  13)  25.9^ | This Town Needs Guns - Chinchilla [math rock / emo]
+  14)  25.1^ | Dave Grohl - Play [rock]
+  15)  24.9^ | mouse on the keys - spectres de mouse [math jazz]
+  16)  23.1^ | Yussef Kamaal - Strings of Light [jazz-funk]
+  17)  21.2^ | Gogol Bordello - Immigraniada (We Comin' Rougher) [gypsy punk]
+  18)  21.0^ | Spiritualized - Ladies and Gentlemen We Are Floating in Space [neo-psychedelic space rock]
+  19)  20.1^ | RX Bandits - Hope Is A Butterfly, No Net Its Captor
+  20)  20.0^ | Béla Fleck & The Original Flecktones - Sinister Minister [jazz / funk / bluegrass]
   21)  20.0^ | Björk - Isobel [trip hop]
-  22)  20.0^ | Béla Fleck & The Original Flecktones - Sinister Minister [jazz / funk / bluegrass]
-  23)  20.0^ | RX Bandits - Hope Is A Butterfly, No Net Its Captor
-  24)  18.1^ | Octave Cat - Koji [jazz-funk]
-  25)  18.1^ | Taylor McFerrin, Thundercat, Robert Glasper - Already There [psychedelic jazz]
-  26)  17.0^ | Ozric Tentacles - Eternal Wheel
-  27)  17.0^ | Hiatus Kaiyote - Swamp Thing
-  28)  16.1^ | Little Tybee - Don't Quit Your Day Job [Folk/Psych]
-  29)  15.9^ | Windhand - Forest Clouds
-  30)  15.9^ | Stromae - Papaoutai [hip hop house pop]
-  31)  15.2^ | De Staat - Witch Doctor
-  32)  15.0^ | Secret Chiefs 3 - The 15
-  33)  14.9^ | Cardiacs - Fiery Gun Hand
-  34)  14.1^ | The Breathing Effect - Shapes That Change Shape
-  35)  14.1^ | Andrew Huang - Nostalgia
-  36)  13.9^ | clipping. - The Breach
-  37)  13.1^ | David Bowie - The Man Who Sold The World
-  38)  13.1^ | YOB - Burning the Altar
-  39)  13.0^ | GEM - Crazy Tweaks (Fusion)
-  40)  12.9^ | Jimmy Page, Robert Plant, Najma Akhtar - The Battle Of Evermore [folk rock]
-  41)  12.1^ | Alice In Chains - Check My Brain
-  42)  12.0^ | Sleepytime Gorilla Musuem - Phthisis [avant garde metal]
-  43)  12.0^ | Muma - Wave Out
-  44)  12.0^ | Run The Jewels - walking in the snow
-  45)  12.0^ | Puddle Of Mudd - About a Girl
-  46)  11.8^ | Phish - Llama
-  47)  11.1^ | Roxy Music - Editions Of You [Art Rock]
-  48)  11.0^ | Wax Fang - "Majestic" (Psychedelic/prog)
-  49)  11.0^ | Christian Scott aTunde Adjuah feat. Elena Pinderhughes - Twin [jazz fusion]
-  50)  10.9^ | Avishai Cohen — Seven Seas
-  51)  10.8^ | Talk Talk - Ascension Day [Grunge/Alternative]
-  52)  10.2^ | Floating Points, Pharoah Sanders & The London Symphony Orchestra - Promises
-  53)  10.1^ | Foo Fighters - The Colour And The Shape
-  54)  10.1^ | Jaga Jazzist - Kitty Wu [Electronic]
-  55)  10.1^ | Death Grips - The Fear
-  56)  10.1^ | My Morning Jacket - One Big Holiday
-  57)  10.0^ | Soundgarden - 4th Of July
-  58)  10.0^ | White Denim - At The Farm
-  59)   9.9^ | Town Portal - K [progressive math rock]
-  60)   9.2^ | Kay Kay and His Weathered Underground - Hey Momma [psychedelic/indie/jazz]
+  22)  19.9^ | Puscifer - Green Valley [alt rock / industrial]
+  23)  18.0^ | Octave Cat - Koji [jazz-funk]
+  24)  18.0^ | Taylor McFerrin, Thundercat, Robert Glasper - Already There [psychedelic jazz]
+  25)  17.0^ | Hiatus Kaiyote - Swamp Thing
+  26)  16.9^ | Ozric Tentacles - Eternal Wheel
+  27)  16.0^ | Stromae - Papaoutai [hip hop house pop]
+  28)  16.0^ | Windhand - Forest Clouds
+  29)  16.0^ | Little Tybee - Don't Quit Your Day Job [Folk/Psych]
+  30)  15.1^ | Secret Chiefs 3 - The 15
+  31)  15.1^ | Cardiacs - Fiery Gun Hand
+  32)  14.9^ | De Staat - Witch Doctor
+  33)  14.1^ | clipping. - The Breach
+  34)  14.0^ | The Breathing Effect - Shapes That Change Shape
+  35)  14.0^ | Andrew Huang - Nostalgia
+  36)  13.2^ | Jimmy Page, Robert Plant, Najma Akhtar - The Battle Of Evermore [folk rock]
+  37)  13.1^ | YOB - Burning the Altar
+  38)  13.0^ | GEM - Crazy Tweaks (Fusion)
+  39)  13.0^ | David Bowie - The Man Who Sold The World
+  40)  12.1^ | Run The Jewels - walking in the snow
+  41)  12.1^ | Puddle Of Mudd - About a Girl
+  42)  12.0^ | Alice In Chains - Check My Brain
+  43)  12.0^ | Phish - Llama
+  44)  11.9^ | Sleepytime Gorilla Musuem - Phthisis [avant garde metal]
+  45)  11.8^ | Muma - Wave Out
+  46)  11.1^ | Wax Fang - "Majestic" (Psychedelic/prog)
+  47)  11.1^ | Avishai Cohen — Seven Seas
+  48)  11.0^ | Talk Talk - Ascension Day [Grunge/Alternative]
+  49)  11.0^ | Roxy Music - Editions Of You [Art Rock]
+  50)  11.0^ | Christian Scott aTunde Adjuah feat. Elena Pinderhughes - Twin [jazz fusion]
+  51)  10.1^ | Foo Fighters - The Colour And The Shape
+  52)  10.1^ | Floating Points, Pharoah Sanders & The London Symphony Orchestra - Promises
+  53)  10.0^ | Soundgarden - 4th Of July
+  54)  10.0^ | White Denim - At The Farm
+  55)  10.0^ | Town Portal - K [progressive math rock]
+  56)  10.0^ | My Morning Jacket - One Big Holiday
+  57)   9.9^ | Death Grips - The Fear
+  58)   9.8^ | Jaga Jazzist - Kitty Wu [Electronic]
+  59)   9.2^ | The Red Chord - Like A Train Through A Pigeon
+  60)   9.2^ | GoGo Penguin - Reactor
