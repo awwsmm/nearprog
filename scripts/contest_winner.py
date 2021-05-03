@@ -33,7 +33,7 @@ from tools import reddit
 #
 #===============================================================================
 
-def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
+def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5, debug_mode = False):
 
     if (iterations < 2):
         print(f"  Note: 'iterations' must be >= 2 at minimum. Set to 2.")
@@ -78,6 +78,9 @@ def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
     # remove mods from the running
     mods = ["MysteriousGear", "_awwsmm", "yyogo"]
 
+    if (debug_mode):
+        print(f" ! Top-level comments from mods {mods} will be ignored\n")
+
     connection = reddit.connect()
     for i in range(iterations):
         print(f"Collecting data ({i+1}/{iterations})...", end="\r")
@@ -92,9 +95,14 @@ def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
         for comment in contest.comments:
             author = str(comment.author)
             if (author not in mods):
-                id = comment.permalink.split('/')[-2]
+                link = comment.permalink
+                id = link.split('/')[-2]
                 username.setdefault(id, author)
                 scores[id].append(comment.score)
+                if (debug_mode):
+                    print(f" ! Comment @ https://www.reddit.com{link}")
+                    print(f" !   posted by u/{author}")
+                    print(f" !   has a score of {comment.score}\n")
 
     # clear the "Collecting data" line
     print("                                                         ", end="\r")
@@ -129,7 +137,7 @@ def findAndEvaluate (search_term, multi_comment_mode = False, iterations = 5):
         # print out the rankings
         rank = 1
         for user, (n, upvotes, score) in ranked:
-            print(f"  {rank:2d} @ {score:2.2f} (== {upvotes:2.2f} - {n:2d}) | {user}")
+            print(f"  {rank:2d} @ {score:5.2f} (== {upvotes:5.2f} - {n:2d}) | {user}")
             rank += 1
 
     # single-comment ("normal") mode
@@ -158,5 +166,8 @@ if (len(sys.argv) > 1 and "contest_winner.py" in sys.argv[0]):
     parser.add_argument('-m', dest="multi", action='store_true',
         help="enable multi-comment mode (see comments in source)")
 
+    parser.add_argument('--debug', dest="debug", action='store_true',
+        help="run in 'debug' mode (lots of output)")
+
     args = parser.parse_args()
-    findAndEvaluate(args.term, args.multi, max(2, args.num))
+    findAndEvaluate(args.term, args.multi, max(2, args.num), args.debug)
