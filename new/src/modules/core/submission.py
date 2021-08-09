@@ -2,21 +2,25 @@ from collections.abc import Callable
 import json
 import praw.models
 import re
-from typing import Any, Iterator, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 class Submission:
     """A Submission can be a PRAW Submission or any other kind of Submission representation."""
 
-    def __init__(self, timestamp: int, flair: str = 'N/A', raw_title: str = 'N/A') -> None:
+    # add mandatory 'score' and 'upvote_ratio' fields
+
+    def __init__(self, timestamp: int, flair: str = 'N/A', raw_title: str = 'N/A', score: int = -1, upvote_ratio: float = -1.0) -> None:
         """Create a Submission object by directly defining its fields."""
 
         self.timestamp = timestamp
         self.flair = flair
         self.raw_title = raw_title
+        self.score = score
+        self.upvote_ratio = upvote_ratio
 
     __processed = False
 
-    def process(self):
+    def process(self) -> None:
         """Parse this Submission's title, extracting artist, song, subgenre, and other information."""
 
         if (self.is_song()):
@@ -31,10 +35,28 @@ class Submission:
             self.__processed = True
 
     @staticmethod
+    def deserialise(dict: Dict) -> None:
+        """Create a Submission from a serialised (JSON) form."""
+
+        if not all(map(lambda x: x in dict, ['timestamp', 'flair', 'raw_title', 'score', 'upvote_ratio'])):
+            raise ValueError('Cannot deserialise malformed submission. Missing one or more required fields: "timestamp", "flair", "raw_title", "score", "upvote_ratio".')
+
+        submission = Submission(dict['timestamp'], dict['flair'], dict['raw_title'], dict['score'], dict['upvote_ratio'])
+
+        if all(map(lambda x: x in dict, ['artist', 'song_title', 'featuring', 'subgenre', 'year'])):
+            submission.artist = dict['artist']
+            submission.song_title = dict['song_title']
+            submission.featuring = dict['featuring']
+            submission.subgenre = dict['subgenre']
+            submission.year = dict['year']
+
+        return submission
+
+    @staticmethod
     def wrap(submission: praw.models.Submission) -> None:
         """Create a Submission object from a PRAW Submission."""
 
-        return Submission(int(submission.created_utc), submission.link_flair_text, submission.title)
+        return Submission(int(submission.created_utc), submission.link_flair_text, submission.title, submission.score, submission.upvote_ratio)
 
     def is_song(self) -> bool:
         """Returns True if this Submission is a song (and not a contest, etc.)."""
@@ -50,22 +72,26 @@ class Submission:
                 self.process()
             return (
                 '{'
-                f'\n  "timestamp"  : {self.timestamp},'
-                f'\n  "flair"      : {json.dumps(self.flair, ensure_ascii=False)},'
-                f'\n  "raw_title"  : {json.dumps(self.raw_title, ensure_ascii=False)},'
-                f'\n  "artist"     : {json.dumps(self.artist, ensure_ascii=False)},'
-                f'\n  "song_title" : {json.dumps(self.song_title, ensure_ascii=False)},'
-                f'\n  "featuring"  : {json.dumps(self.featuring, ensure_ascii=False)},'
-                f'\n  "subgenre"   : {json.dumps(self.subgenre, ensure_ascii=False)},'
-                f'\n  "year"       : {self.year or "null"}'
+                f'\n"timestamp"   : {self.timestamp},'
+                f'\n"flair"       : {json.dumps(self.flair, ensure_ascii=False)},'
+                f'\n"raw_title"   : {json.dumps(self.raw_title, ensure_ascii=False)},'
+                f'\n"score"       : {self.score},'
+                f'\n"upvote_ratio": {self.upvote_ratio},'
+                f'\n"artist"      : {json.dumps(self.artist, ensure_ascii=False)},'
+                f'\n"song_title"  : {json.dumps(self.song_title, ensure_ascii=False)},'
+                f'\n"featuring"   : {json.dumps(self.featuring, ensure_ascii=False)},'
+                f'\n"subgenre"    : {json.dumps(self.subgenre, ensure_ascii=False)},'
+                f'\n"year"        : {self.year or "null"}'
                 '\n}'
             )
         else:
             return (
                 '{'
-                f'\n  "timestamp"  : {self.timestamp},'
-                f'\n  "flair"      : {json.dumps(self.flair, ensure_ascii=False)},'
-                f'\n  "raw_title"  : {json.dumps(self.raw_title, ensure_ascii=False)}'
+                f'\n"timestamp"   : {self.timestamp},'
+                f'\n"flair"       : {json.dumps(self.flair, ensure_ascii=False)},'
+                f'\n"raw_title"   : {json.dumps(self.raw_title, ensure_ascii=False)},'
+                f'\n"score"       : {self.score},'
+                f'\n"upvote_ratio": {self.upvote_ratio}'
                 '\n}'
             )
 

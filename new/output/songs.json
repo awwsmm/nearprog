@@ -1,0 +1,47 @@
+[
+{
+"timestamp"   : 1628530440,
+"flair"       : "Alt Metal",
+"raw_title"   : "Incubus - Redefine [experimental metal]",
+"score"       : 12,
+"upvote_ratio": 1.0,
+"artist"      : "Incubus",
+"song_title"  : "Redefine",
+"featuring"   : [],
+"subgenre"    : "experimental metal",
+"year"        : null
+}, {
+"timestamp"   : 1628442799,
+"flair"       : "Electronic",
+"raw_title"   : "Alien Alarms - Polygon Sea",
+"score"       : 5,
+"upvote_ratio": 1.0,
+"artist"      : "Alien Alarms",
+"song_title"  : "Polygon Sea",
+"featuring"   : [],
+"subgenre"    : null,
+"year"        : null
+}, {
+"timestamp"   : 1628409517,
+"flair"       : "Psychedelic / Space Rock",
+"raw_title"   : "Stephen Malkmus & The Jicks - (Do Not Feed The) Oyster [freak folk / garage rock]",
+"score"       : 8,
+"upvote_ratio": 0.91,
+"artist"      : "Stephen Malkmus and the Jicks",
+"song_title"  : "(Do Not Feed The) Oyster",
+"featuring"   : [],
+"subgenre"    : "freak folk / garage rock",
+"year"        : null
+}, {
+"timestamp"   : 1628353145,
+"flair"       : "Avant-Garde / Experimental",
+"raw_title"   : "John Cale & Terry Riley - The Hall of Mirrors in the Palace of Versailles",
+"score"       : 12,
+"upvote_ratio": 1.0,
+"artist"      : "John Cale",
+"song_title"  : "The Hall of Mirrors in the Palace of Versailles",
+"featuring"   : ["Terry Riley"],
+"subgenre"    : null,
+"year"        : null
+}
+]
