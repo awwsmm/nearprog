@@ -6,9 +6,9 @@ out
 parsed.json
 raw.txt
 .DS_Store
-.vscode
 posts_parsed.json
 posts_raw.txt
 scripts/data
 traffic*.json
 private_*
+.pytest_cache

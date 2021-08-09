@@ -1,0 +1,13 @@
+{
+  "editor.minimap.enabled": false,
+  "editor.tabSize": 4,
+  "editor.useTabStops": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "python.testing.pytestArgs": [
+    "new/src"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true
+}
