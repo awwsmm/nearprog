@@ -204,9 +204,9 @@ class Title:
 
         tags = re.compile(re_tag).findall(raw_song)
 
-        # print(f'"{artist}"')
-        # print(", ".join(featuring))
-        # print(", ".join(tags))
+        re_year_paren = r"\(([0-9]{4})\)"
+
+        tags = tags + re.compile(re_year_paren).findall(raw_song)
 
         # if there are any tags at all...
         if len(tags) > 0:
@@ -231,10 +231,6 @@ class Title:
                 subgenre = str(tags[0])
             else:
                 subgenre = None
-
-            # print(f'"{song_title}"')
-            # print(f'"{year}"')
-            # print(f'"{subgenre}"')
 
             return Title(artist, song_title, featuring, subgenre, year)
 

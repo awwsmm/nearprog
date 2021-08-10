@@ -8,7 +8,7 @@ from src.modules.connection import Connection
 class Pull:
 
     @staticmethod
-    def songs(since: int):
+    def songs(since: int, limit: int):
         """Pulls all song submissions from r/nearprog since the given UTC UNIX timestamp."""
 
         path = Path(__file__).parent
@@ -18,7 +18,7 @@ class Pull:
         # connect to r/nearprog and fetch recent song submissions
         config = Config.read((path / to / file).resolve())
         connection = Connection(config)
-        submissions: Iterator[Submission] = connection.fetch_submissions(since = since)
+        submissions: Iterator[Submission] = connection.fetch_submissions(since=since, limit=limit)
         songs = filter(lambda s: s.is_song(), submissions)
 
         # sort old-to-new by timestamp (use timestamp as primary key)
