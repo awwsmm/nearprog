@@ -29,8 +29,6 @@ def format_table(fields, columns=3):
 link_templates = reddit.nearprog().flair.link_templates
 flairs = list(map(lambda x: x["text"], link_templates))
 
-flairs.remove("Announcement")
-flairs.remove("Contest")
 flairs.remove("Discussion")
 
 baseurl = "https://old.reddit.com/r/nearprog/search?restrict_sr=on&q=flair%3A"
