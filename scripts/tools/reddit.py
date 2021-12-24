@@ -73,10 +73,13 @@ def split_title(title: str) -> Tuple[str, str]:
 
     stripped = title.strip()
 
-    # this gives us the artist at [0] and everything else at [2]
-    split_title = re.split(' (-|—)+ ', stripped, 1) # only split 1 time
+    if (title == "Sam Greenfield | Banana Song [meme jazz-pop] (2021)"):
+        return ("Sam Greenfield", "Banana Song [meme jazz-pop] (2021)")
 
-    return (split_title[0], split_title[2]) # (artist, song)
+    else:
+        # this gives us the artist at [0] and everything else at [2]
+        split_title = re.split(' (-|—)+ ', stripped, 1) # only split 1 time
+        return (split_title[0], split_title[2]) # (artist, song)
 
 def fetch_submissions_since(connection: Reddit, utc_timestamp: int) -> List[Submission]:
     """Return all r/nearprog submissions since the given UTC UNIX timestamp."""
